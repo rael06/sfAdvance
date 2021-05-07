@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} Top{% endblock %}
+
+{% block body %}
+    <div class='container'>
+        <h1>Les {{ books|length }} meilleurs livres du moment</h1>
+        <div class='card-deck'>
+            {% for book in books %}
+                {% if loop.index0 % 3 == 0 %}
+                    </div><div class='card-deck'>
+                {% endif %}
+                <div class="card bg-light border-secondary" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ book.titre | striptags | capitalize }}</h5>
+                        <img class="card-img-top"
+                             style="height: 70% !important;padding-bottom: 15px;"
+                             src="{{ book.img | default('/assets/images/default_cover.png') }}"
+                             alt='Couverture du livre {{ book.titre | striptags | lower }}'>
+                        {% if book['éditeur'] is defined %}
+                            <h6 class="card-subtitle mb-2 text-muted">Aux éditions : {{ book['éditeur'] | title }}</h6>
+                        {% else %}
+                            <div style='height:21px;'></div>
+                        {% endif %}
+                        <p class="card-text">C'est un {{ book.genre | default('livre') | lower }} {{ book.auteur ? 'de ' ~ book.auteur | title : '' }} {{ book.date ? ' paru le ' ~ book.date | date('m/Y') : '' }}</p>
+                    </div>
+                    <div class="card-footer text-right text-monospace">{{ book.ISBN | isbn('-') }}</div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
